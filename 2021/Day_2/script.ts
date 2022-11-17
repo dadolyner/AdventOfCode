@@ -1,10 +1,17 @@
 import PuzzleInput from './data'
 
+// Prepare data for calculations
+const preparedData = PuzzleInput.map((movement) => {
+    const direction = movement.split(" ")[0]
+    const units = +movement.split(" ")[1]
+    return { direction, units }
+})
+
 // Part 1
 const moveSubmarine = () => {
     let horizontalPosition = 0, depth = 0
 
-    PuzzleInput.forEach((movement) => {
+    preparedData.forEach((movement) => {
         const { direction, units } = movement
 
         switch (direction) {
@@ -29,7 +36,7 @@ console.log("Final horizontal position multiplied by final depth: ", moveSubmari
 const moveSubmarineWithAim = () => {
     let horizontalPosition = 0, depth = 0, aim = 0
 
-    PuzzleInput.forEach((movement) => {
+    preparedData.forEach((movement) => {
         const { direction, units } = movement
 
         switch (direction) {
