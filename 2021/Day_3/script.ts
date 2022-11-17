@@ -10,13 +10,8 @@ const PartOne = () => {
             else offBitCount++
         }
 
-        if (onBitCount > offBitCount) {
-            gammaRate += '1'
-            epsilonRate += '0'
-        } else {
-            gammaRate += '0'
-            epsilonRate += '1'
-        }
+        if (onBitCount > offBitCount) { gammaRate += '1'; epsilonRate += '0' } 
+        else { gammaRate += '0'; epsilonRate += '1' }
 
         onBitCount = 0
         offBitCount = 0
