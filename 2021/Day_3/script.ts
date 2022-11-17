@@ -1,24 +1,18 @@
 import PuzzleInput from './data'
 
-// Part 1.
-type TReport = {
-    gammaRate: string,
-    epsilonRate: string, 
-}
-const Report: TReport = {
-    gammaRate: '',
-    epsilonRate: '',
-} as TReport
+// Part 1
+type TReport = { gammaRate: string, epsilonRate: string }
+const Report: TReport = { gammaRate: '', epsilonRate: '' } as TReport
 
 const powerConsumptionFrequency = (currentBitPos: number) => {
-    let posBit = 0, negBit = 0, gammaRate = '', epsilonRate = ''
-    for(let i = 0; i < PuzzleInput.length; i++) {
+    let onBitCount = 0, offBitCount = 0, gammaRate = '', epsilonRate = ''
+    for (let i = 0; i < PuzzleInput.length; i++) {
         const bit = PuzzleInput[i].charAt(currentBitPos)
-        if(bit === '1') posBit++
-        else negBit++
+        if (bit === '1') onBitCount++
+        else offBitCount++
     }
 
-    if(posBit > negBit) {
+    if (onBitCount > offBitCount) {
         gammaRate = '1'
         epsilonRate = '0'
     } else {
@@ -31,7 +25,7 @@ const powerConsumptionFrequency = (currentBitPos: number) => {
 
 const calculatePowerConsumption = () => {
     let currentBitPos = 0
-    for(let i = 0; i < PuzzleInput[0].length; i++) {
+    for (let i = 0; i < PuzzleInput[0].length; i++) {
         const { gammaRate, epsilonRate } = powerConsumptionFrequency(currentBitPos)
         Report.gammaRate += gammaRate
         Report.epsilonRate += epsilonRate
@@ -41,34 +35,34 @@ const calculatePowerConsumption = () => {
     const decimalGammaRate = parseInt(Report.gammaRate, 2)
     const decimalEpsilonRate = parseInt(Report.epsilonRate, 2)
     const powerConsumption = decimalGammaRate * decimalEpsilonRate
-    
+
     return powerConsumption
 }
-// console.log(calculatePowerConsumption())
+console.log('Power consumption rating: ', calculatePowerConsumption())
 
-// Part 2.
+// Part 2
 const getRating = (type: 'OxygenGenerator' | 'CO2Scrubber') => {
     let PuzzleData: string[] = PuzzleInput
 
-    for(let col = 0; col < PuzzleInput[0].length; col++) {
-        let posBit = 0, negBit = 0
-        let targetBit = type === 'OxygenGenerator' ? '1' : '0'
-        for(let row = 0; row < PuzzleData.length; row++) {
+    for (let col = 0; col < PuzzleInput[0].length; col++) {
+        let onBitCount = 0, offBitCount = 0
+        for (let row = 0; row < PuzzleData.length; row++) {
             const bit = PuzzleData[row].charAt(col)
-            if(bit === targetBit) posBit++
-            else negBit++
+            if (bit === '1') onBitCount++
+            else offBitCount++
         }
 
-        if(posBit >= negBit) {
-            PuzzleData = PuzzleData.filter(bit => bit.charAt(col) === '1')
-            targetBit = type === 'OxygenGenerator' ? '0' : '1'
-        }
-        else {
-            PuzzleData = PuzzleData.filter(bit => bit.charAt(col) === '0')
-            targetBit = type === 'OxygenGenerator' ? '0' : '1'
+        if (type === 'OxygenGenerator') {
+            if (onBitCount >= offBitCount) PuzzleData = PuzzleData.filter(bit => bit.charAt(col) === '1')
+            else PuzzleData = PuzzleData.filter(bit => bit.charAt(col) === '0')
+            if (PuzzleData.length === 1) break
         }
 
-
+        if (type === 'CO2Scrubber') {
+            if (offBitCount <= onBitCount) PuzzleData = PuzzleData.filter(bit => bit.charAt(col) === '0')
+            else PuzzleData = PuzzleData.filter(bit => bit.charAt(col) === '1')
+            if (PuzzleData.length === 1) break
+        }
     }
 
     const binary = PuzzleData[0]
@@ -79,13 +73,10 @@ const getRating = (type: 'OxygenGenerator' | 'CO2Scrubber') => {
 
 const calculateLifeSupportRating = () => {
     const ogRating = getRating('OxygenGenerator')
-    const co2Rating= getRating('CO2Scrubber')
-
-    console.log('Oxygen Generator Rating:', ogRating)
-    console.log('CO2 Scrubber Rating:', co2Rating)
+    const co2Rating = getRating('CO2Scrubber')
 
     const lifeSupportRating = ogRating.decimal * co2Rating.decimal
     return lifeSupportRating
 }
 
-console.log(calculateLifeSupportRating())
+console.log('Life support rating: ', calculateLifeSupportRating())
