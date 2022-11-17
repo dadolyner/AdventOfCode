@@ -1,4 +1,4 @@
-const Movements = [
+const PuzzleInput = [
     { direction: "forward", units: 8 },
     { direction: "forward", units: 9 },
     { direction: "forward", units: 9 },
@@ -1000,4 +1000,4 @@ const Movements = [
     { direction: "down", units: 7 },
     { direction: "forward", units: 9 },
 ]
-export default Movements
+export default PuzzleInput

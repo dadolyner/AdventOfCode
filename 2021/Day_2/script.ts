@@ -1,10 +1,10 @@
-import Movements from './data'
+import PuzzleInput from './data'
 
 // Part 1
 const moveSubmarine = () => {
     let horizontalPosition = 0, depth = 0
 
-    Movements.forEach((movement) => {
+    PuzzleInput.forEach((movement) => {
         const { direction, units } = movement
 
         switch (direction) {
@@ -23,13 +23,13 @@ const moveSubmarine = () => {
     })
     return horizontalPosition * depth
 }
-console.log("Depth: ", moveSubmarine())
+console.log("Final horizontal position multiplied by final depth: ", moveSubmarine())
 
 // Part 2
 const moveSubmarineWithAim = () => {
     let horizontalPosition = 0, depth = 0, aim = 0
 
-    Movements.forEach((movement) => {
+    PuzzleInput.forEach((movement) => {
         const { direction, units } = movement
 
         switch (direction) {
@@ -49,4 +49,4 @@ const moveSubmarineWithAim = () => {
     })
     return horizontalPosition * depth
 }
-console.log("Depth with aim: ", moveSubmarineWithAim())
+console.log("Final horizontal position multiplied by final depth with aim: ", moveSubmarineWithAim())

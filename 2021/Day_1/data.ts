@@ -1,4 +1,4 @@
-const Report = [
+const PuzzleInput = [
     143,
     147,
     150,
@@ -2000,4 +2000,4 @@ const Report = [
     8145,
     8147,
 ]
-export default Report
+export default PuzzleInput
