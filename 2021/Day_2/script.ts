@@ -8,34 +8,32 @@ const preparedData = PuzzleInput.map((movement) => {
 })
 
 // Part 1
-const moveSubmarine = () => {
+const PartOne = () => {
     let horizontalPosition = 0, depth = 0
-
     preparedData.forEach((movement) => {
         const { direction, units } = movement
 
         switch (direction) {
             case 'forward':
                 horizontalPosition += units
-                break;
+                break
 
             case 'down':
                 depth += units
-                break;
+                break
 
             case 'up':
                 depth -= units
-                break;
+                break
         }
     })
     return horizontalPosition * depth
 }
-console.log("Final horizontal position multiplied by final depth: ", moveSubmarine())
+console.log("Final horizontal position multiplied by final depth: ", PartOne())
 
 // Part 2
-const moveSubmarineWithAim = () => {
+const PartTwo = () => {
     let horizontalPosition = 0, depth = 0, aim = 0
-
     preparedData.forEach((movement) => {
         const { direction, units } = movement
 
@@ -43,17 +41,17 @@ const moveSubmarineWithAim = () => {
             case 'forward':
                 horizontalPosition += units
                 depth += aim * units
-                break;
+                break
 
             case 'down':
                 aim += units
-                break;
+                break
 
             case 'up':
                 aim -= units
-                break;
+                break
         }
     })
     return horizontalPosition * depth
 }
-console.log("Final horizontal position multiplied by final depth with aim: ", moveSubmarineWithAim())
+console.log("Final horizontal position multiplied by final depth with aim: ", PartTwo())
