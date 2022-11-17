@@ -1,5 +1,6 @@
 @echo off
 
+@echo This script generate folders for each day of advent calendar.
 set /P fileName=Enter file name:
 mkdir %fileName%
 cd %fileName%
