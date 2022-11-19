@@ -10,7 +10,8 @@ for /l %%x in (1, 1, 25) do (
 	cd Day_%%x
 	@echo 2> README.md
 	@echo 2> script.ts
-	@echo 2> data.ts
+	@echo 2> puzzle_input.ts
+	@echo 2> test_data.ts
 	cd ..
 )
 
