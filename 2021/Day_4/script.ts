@@ -4,6 +4,7 @@ import PuzzleInput from './puzzle_input'
 type TBoards = { boardIndex: number, id: string, board: string[], drawnNum: number, isWinner: boolean }[]
 
 const Boards: TBoards = []
+const winners: TBoards = []
 class SubmarineBingo {
     numberOfBoards: number = 0
     lastDrawnNumber: number = 0
@@ -64,6 +65,7 @@ class SubmarineBingo {
     public drawNumber = async (number: number) => {
         for (let board = 0; board < Boards.length; board++) {
             const currentBoard = Boards[board]
+            if(currentBoard.isWinner === true) continue
             for (let row = 0; row < 5; row++) {
                 for (let col = 0; col < 5; col++) {
                     if (+currentBoard.board[row][col] === number) { //@ts-ignore
@@ -71,16 +73,12 @@ class SubmarineBingo {
                     }
                 }
             }
-        }
-
-        for (let board = 0; board < Boards.length; board++) {
-            const currentBoard = Boards[board]
             const rowWinner = await this.checkRowBingo(currentBoard.board)
             const colWinner = await this.checkColumnBingo(currentBoard.board)
-            if ((rowWinner === true || colWinner === true) && currentBoard.isWinner == false) {
+            if ((rowWinner === true || colWinner === true) && currentBoard.isWinner === false) {
                 currentBoard.drawnNum = number
                 currentBoard.isWinner = true
-                Boards[board] = currentBoard
+                winners.push(currentBoard)
                 this.lastDrawnNumber = number
                 return { boardIndex: board, currentBoard }
             }
@@ -121,6 +119,8 @@ const PartTwo = async () => {
         }
     }
 
-    console.log(Boards)
+    const lastWinner = winners[winners.length - 1]
+    const score = await game.calculateScore(lastWinner.board, lastWinner.drawnNum)
+    console.log(`The final score is: ${score}`)
 }
 PartTwo()
