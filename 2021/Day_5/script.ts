@@ -1,77 +1,83 @@
-import PuzzleInput from './test_input'
+import PuzzleInput from './puzzle_input'
 
-type TCoords = {
-    type: {
-        isVertical: boolean
-        isHorizontal: boolean
-    }
-    from: { x1: number, y1: number }
-    to: { x2: number, y2: number }
-}
-type TDiagram = Array<TCoords>
-const Diagram: TDiagram = []
+type TCoord = { x: number; y: number; }
+type Line = { start: TCoord, end: TCoord }
+type Part = 'One' | 'Two'
 class HydrothermalVents {
     constructor() { }
 
-    generateCoords = async () => {
-        const coords: TCoords[] = []
-        PuzzleInput.forEach((line) => {
-            const [from, to] = line.split(' -> ')
-            const [fromX, fromY] = from.split(',').map(Number)
-            const [toX, toY] = to.split(',').map(Number)
-            coords.push({
-                type: {
-                    isVertical: fromX === toX,
-                    isHorizontal: fromY === toY,
-                },
-                from: { x1: fromX, y1: fromY },
-                to: { x2: toX, y2: toY },
-            })
-        })
-        return coords.filter((coord) => coord.from.x1 === coord.to.x2 || coord.from.y1 === coord.to.y2)
-    }
+    private generateCoords = (): Line[] => {
+        return PuzzleInput.map(item => {
+            const coords = item.split(" -> ").map(coord => coord.split(",")).flat().map(coord => Number.parseInt(coord, 10))
 
-    addPoint = async (diagram: TDiagram, x: number, y: number) => {
-        const point = diagram.find((p) => p.from.x1 === x && p.from.y1 === y)
-        if (point) return point 
-        const newPoint = {
-            type: { isVertical: false, isHorizontal: false },
-            from: { x1: x, y1: y },
-            to: { x2: x, y2: y },
-        }
-        diagram.push(newPoint)
-        return newPoint
-    }
-
-    createDiagram = async () => {
-        const diagram: Array<Array<any>> = []
-        for (let row = 0; row < 10; row++) {
-            diagram.push([])
-            for (let col = 0; col < 10; col++) diagram[row].push(0)
-        }
-
-        const coords = await this.generateCoords()
-        coords.forEach((coord) => {
-            const { type, from, to } = coord
-            const { x1, y1 } = from
-            const { x2, y2 } = to
-            if (type.isVertical) {
-                const minY = Math.min(y1, y2)
-                const maxY = Math.max(y1, y2)
-                for (let y = minY; y <= maxY; y++) this.addPoint
+            return {
+                start: { x: coords[0], y: coords[1] },
+                end: { x: coords[2], y: coords[3] },
             }
         })
+    }
 
-        diagram.forEach((row, rowIndex) => row.forEach((col, colIndex) => { if (col === 0) diagram[rowIndex][colIndex] = '.' }))
-        return diagram
+    private diagonalToCoords = (line: Line): TCoord[] => {
+        const points: TCoord[] = []
+        let x = line.start.x
+        let y = line.start.y
+        while (x != line.end.x) {
+            points.push({ x: x, y: y })
+            x > line.end.x ? x-- : x++
+            y > line.end.y ? y-- : y++
+        }
+        points.push({ x: x, y: y })
+        return points
+    }
+
+    private calculateRange = (a: number, b: number): number[] => {
+        let index = a > b ? b : a
+        const indexLimit = a < b ? b + 1 : a + 1
+        const range: number[] = []
+        while (index < indexLimit) { 
+            range.push(index)
+            index++
+        }
+        return range
+    }
+
+    private calculateLine = (line: Line, part: Part): TCoord[] => {
+        if ((line.start.y != line.end.y && line.start.x != line.end.x) && part === 'One') return []
+        if ((line.start.y != line.end.y && line.start.x != line.end.x) && part === 'Two') return this.diagonalToCoords(line);
+        if (line.start.y != line.end.y) return this.calculateRange(line.start.y, line.end.y).map(yPoint => { return { x: line.start.x, y: yPoint }; })
+        if (line.start.x != line.end.x) return this.calculateRange(line.start.x, line.end.x).map(xPoint => { return { x: xPoint, y: line.start.y }; })
+
+        return [{ x: line.start.x, y: line.start.y }]
+    }
+
+    public calculateOverlaps = (part: Part): number => {
+        const Lines: Line[] = this.generateCoords()
+        const Points: TCoord[] = Lines.map(line => this.calculateLine(line, part)).flat()
+
+        const pointsOverlap = new Map<string, boolean>()
+        Points.forEach(point => {
+            const key = `${point.x},${point.y}`
+            pointsOverlap.has(key) ? pointsOverlap.set(key, true) : pointsOverlap.set(key, false)
+        })
+
+        let overlaps: number = 0
+        pointsOverlap.forEach(overlap => overlap ? overlaps++ : null)
+
+        return overlaps
     }
 }
-
-const PartOne = async () => {
+// Part 1
+const PartOne = () => {
     const htv = new HydrothermalVents()
-    const coords = await htv.generateCoords()
-    console.log(coords)
-    const diagram = await htv.createDiagram()
-    console.log(diagram)
+    const overlaps = htv.calculateOverlaps('One')
+    console.log(`Number of vertical and horizontal overlaps: ${overlaps}`)
 }
 PartOne()
+
+// Part 2
+const PartTwo = () => {
+    const htv = new HydrothermalVents()
+    const overlaps = htv.calculateOverlaps('Two')
+    console.log(`Number of all overlaps: ${overlaps}`)
+}
+PartTwo()
