@@ -48,7 +48,7 @@ class SevenSegment {
         return -1
     }
 
-    getOutput = (puzzleLine: PuzzleLine): number => {
+    public getOutput = (puzzleLine: PuzzleLine): number => {
         const outputMap = new Map<string, number>()
         const charsOf1 = puzzleLine.inputs.filter(input => input.length == lengthOf1)[0]
         const charsOf4 = puzzleLine.inputs.filter(input => input.length == lengthOf4)[0]
