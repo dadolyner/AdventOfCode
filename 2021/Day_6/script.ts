@@ -48,7 +48,7 @@ const PartTwo = () => {
     const LanternFishesData: Array<number> = PuzzleData.split(',').map(age => Number.parseInt(age, 10))
     const numOfdays = 256
 
-    const batch = new Array(9).fill(0)
+    const batch = new Array(32).fill(0)
     LanternFishesData.forEach(age => batch[age]++)
 
     for (let day = 0; day < numOfdays; day++) {
