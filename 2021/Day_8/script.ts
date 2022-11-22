@@ -1,84 +1,83 @@
-import PuzzleData from './test_data'
+import PuzzleData from './puzzle_input'
 
-const Segments = { '0': [], '1': [], '2': [], '3': [], '4': [], '5': [], '6': [], '7': [], '8': [], '9': [] }
-
+// Part 1
 const PartOne = () => {
     const uniqueSegments: Array<string> = []
-    PuzzleData.forEach((line) => {
+    const data = PuzzleData.split('\n')
+    data.forEach((line) => {
         const outputArray = line.split(' | ')[1].split(' ')
         outputArray.forEach((signal) => {
             if (signal.length === 2) uniqueSegments.push(signal) // display 1
-            else if(signal.length === 4) uniqueSegments.push(signal) // display 4
-            else if(signal.length === 3) uniqueSegments.push(signal) // display 7
-            else if(signal.length === 7) uniqueSegments.push(signal) // display 8
+            else if (signal.length === 4) uniqueSegments.push(signal) // display 4
+            else if (signal.length === 3) uniqueSegments.push(signal) // display 7
+            else if (signal.length === 7) uniqueSegments.push(signal) // display 8
             else return
         })
     })
-    console.log(uniqueSegments.length)
+    console.log(`In output values, 1, 4, 7, or 8 appear: ${uniqueSegments.length} times`)
 }
-// PartOne()
+PartOne()
+
+// Part 2
+interface PuzzleLine { inputs: string[]; outputs: string[]; }
+
+const [lengthOf1, lengthOf4, lengthOf7, lengthOf8] = [2, 4, 3, 7]
+const PuzzleInput: PuzzleLine[] = PuzzleData.split("\n").map(line => {
+    const inputs: string[] = line.split(" | ")[0].split(" ").map(unsortedStr => { return [...unsortedStr].sort().join('') })
+    const outputs: string[] = line.split(" | ")[1].split(" ").map(unsortedStr => { return [...unsortedStr].sort().join('') })
+    return { inputs: inputs, outputs: outputs }
+})
+class SevenSegment {
+    private getCommonEdges = (a: string, b: string): number => {
+        let commonEdgesCount = 0
+        for (let char of a) if (b.includes(char)) commonEdgesCount++
+        return commonEdgesCount
+    }
+
+    private getDigit = (input: string, digit1: string, digit4: string, digit8: string): number => {
+        if (input.length === 6) {
+            if (this.getCommonEdges(digit1, input) === 2 && this.getCommonEdges(digit4, input) === 3 && this.getCommonEdges(digit8, input) === 6) { return 0 }
+            if (this.getCommonEdges(digit1, input) === 1 && this.getCommonEdges(digit4, input) === 3 && this.getCommonEdges(digit8, input) === 6) { return 6 }
+            if (this.getCommonEdges(digit1, input) === 2 && this.getCommonEdges(digit4, input) === 4 && this.getCommonEdges(digit8, input) === 6) { return 9 }
+        }
+        if (input.length === 5) {
+            if (this.getCommonEdges(digit1, input) === 1 && this.getCommonEdges(digit4, input) === 2 && this.getCommonEdges(digit8, input) === 5) { return 2 }
+            if (this.getCommonEdges(digit1, input) === 2 && this.getCommonEdges(digit4, input) === 3 && this.getCommonEdges(digit8, input) === 5) { return 3 }
+            if (this.getCommonEdges(digit1, input) === 1 && this.getCommonEdges(digit4, input) === 3 && this.getCommonEdges(digit8, input) === 5) { return 5 }
+        }
+        return -1
+    }
+
+    getOutput = (puzzleLine: PuzzleLine): number => {
+        const outputMap = new Map<string, number>()
+        const charsOf1 = puzzleLine.inputs.filter(input => input.length == lengthOf1)[0]
+        const charsOf4 = puzzleLine.inputs.filter(input => input.length == lengthOf4)[0]
+        const charsOf7 = puzzleLine.inputs.filter(input => input.length == lengthOf7)[0]
+        const charsOf8 = puzzleLine.inputs.filter(input => input.length == lengthOf8)[0]
+
+        outputMap.set(charsOf1, 1)
+        outputMap.set(charsOf4, 4)
+        outputMap.set(charsOf7, 7)
+        outputMap.set(charsOf8, 8)
+
+        let forDeletion = [charsOf1, charsOf4, charsOf7, charsOf8]
+        const remainingDigits = puzzleLine.inputs.filter(item => !forDeletion.includes(item))
+
+        for (const digit of remainingDigits) outputMap.set(digit, this.getDigit(digit, charsOf1, charsOf4, charsOf8))
+
+        let outputStr = ""
+        for (let outputDigit of puzzleLine.outputs) outputStr = `${outputStr}${outputMap.get(outputDigit)}`
+
+        return +outputStr
+    }
+}
 
 const PartTwo = () => {
-    PuzzleData.forEach((line) => {
-        const currentSegment = { a: '', b: '', c: '', d: '', e: '', f: '', g: '' }
-        const [signals, output] = line.split(' | ')
-        const signalArray = signals.split(' ')
-        const outputArray = output.split(' ')
-
-        // Test input of mixed
-        // be cfbegad cbdgef fgaecd cgeb fdcge agebfd fecdb fabcd edb
-        
-        // Table of propper signals
-        // 0 -> abcdef
-        // 1 -> ab      has
-        // 2 -> abdeg
-        // 3 -> abcdg
-        // 4 -> bcfg    has
-        // 5 -> acdfg
-        // 6 -> acdefg
-        // 7 -> abc     has
-        // 8 -> abcdefg 
-        // 9 -> abcdfg
-        
-        // test
-        // be cfbegad cbdgef fgaecd cgeb fdcge agebfd fecdb fabcd edb
-
-        // expected output: 996280
-
-        signalArray.forEach(signal => {
-            if(signal.length === 2) {
-                const one = signal.split('')
-                currentSegment.c = one[0]
-                currentSegment.f = one[1]
-            }
-            else if(signal.length === 4) {
-                const four = signal.split('')
-                currentSegment.b = four[0]
-                currentSegment.c = four[1]
-                currentSegment.d = four[2]
-                currentSegment.f = four[3]
-            }
-            else if(signal.length === 3) {
-                const seven = signal.split('')
-                currentSegment.a = seven[0]
-                currentSegment.c = seven[1]
-                currentSegment.f = seven[2]
-            }
-            else if(signal.length === 7) {
-                const eight = signal.split('')
-                currentSegment.a = eight[0]
-                currentSegment.b = eight[1]
-                currentSegment.c = eight[2]
-                currentSegment.d = eight[3]
-                currentSegment.e = eight[4]
-                currentSegment.f = eight[5]
-                currentSegment.g = eight[6]
-            }
-        })
-
-        console.log(currentSegment)
-    })
-
-
+    const sevenSegment = new SevenSegment()
+    let output = 0
+    for (const puzzleLine of PuzzleInput) {
+        output += sevenSegment.getOutput(puzzleLine)
+    }
+    console.log('Sum of all outputed values is:', output)
 }
 PartTwo()
