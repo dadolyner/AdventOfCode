@@ -1,5 +1,6 @@
 import PuzzleInput from './puzzle_input'
 
+// Part 1
 const fullyContains = (arr, target) => target.every(v => arr.includes(v));
 const PartOne = () => {
     const firstElvJobs = []
@@ -8,12 +9,10 @@ const PartOne = () => {
     PuzzleInput.forEach((pair) => {
         const firstPairJobs = []
         const secondPairJobs = []
-        
         const [first, second] = pair.split(',')
 
         const firstRange = first.split('-')
         for(let i = parseInt(firstRange[0]); i <= parseInt(firstRange[1]); i++) firstPairJobs.push(i)
-        
         const secondRange = second.split('-')
         for(let i = parseInt(secondRange[0]); i <= parseInt(secondRange[1]); i++) secondPairJobs.push(i)
 
@@ -26,14 +25,13 @@ const PartOne = () => {
         const firstPairJobs = firstElvJobs[i]
         const secondPairJobs = secondElvJobs[i]
 
-        if(fullyContains(firstPairJobs, secondPairJobs) || fullyContains(secondPairJobs, firstPairJobs)) {
-            overlapingAssignments++
-        }
+        if(fullyContains(firstPairJobs, secondPairJobs) || fullyContains(secondPairJobs, firstPairJobs)) overlapingAssignments++
     })
     console.log(`In total, ${overlapingAssignments} pairs one fully contains the other`)
 }
 PartOne()
 
+// Part 2
 const PartTwo = () => {
     const firstElvJobs = []
     const secondElvJobs = []
@@ -41,12 +39,10 @@ const PartTwo = () => {
     PuzzleInput.forEach((pair) => {
         const firstPairJobs = []
         const secondPairJobs = []
-        
         const [first, second] = pair.split(',')
 
         const firstRange = first.split('-')
         for(let i = parseInt(firstRange[0]); i <= parseInt(firstRange[1]); i++) firstPairJobs.push(i)
-        
         const secondRange = second.split('-')
         for(let i = parseInt(secondRange[0]); i <= parseInt(secondRange[1]); i++) secondPairJobs.push(i)
 
