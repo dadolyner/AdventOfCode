@@ -11,15 +11,15 @@ class DayOne {
 	private sanitize = (document: string[]): string[] => {
 		for (const line in document) {
 			document[line] = document[line]
-				.replace(/one/g, "o1e")
-				.replace(/two/g, "t2o")
-				.replace(/three/g, "th3ee")
-				.replace(/four/g, "fo4ur")
-				.replace(/five/g, "fi5ve")
-				.replace(/six/g, "s6x")
-				.replace(/seven/g, "se7en")
-				.replace(/eight/g, "ei8th")
-				.replace(/nine/g, "ni9ne");
+				.replace(/one/g, "xx1xx")
+				.replace(/two/g, "xx2xx")
+				.replace(/three/g, "xx3xx")
+				.replace(/four/g, "xx4xx")
+				.replace(/five/g, "xx5xx")
+				.replace(/six/g, "xx6xx")
+				.replace(/seven/g, "xx7xx")
+				.replace(/eight/g, "xx8xx")
+				.replace(/nine/g, "xx9xx");
 		}
 		return document;
 	};
