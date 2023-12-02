@@ -1,51 +1,73 @@
 import { PuzzleInput } from "./puzzle_input";
-import { Example } from "./test_data";
 
-const PartOne = (document: string[]) => {
-    let sumOfIds = 0;
-    const Bag = { red: 12, green: 13, blue: 14 };
+class DayTwo {
+    input: string[];
 
-    document.forEach((line) => {
+    constructor(input: string[]) {
+        this.input = input;
+    }
+
+    // Helper function get data from a line in document
+    private useLineData = (line: string) => {
         let [game, sets] = line.split(': ');
         let gameId = +game.match(/(\d+$)/)[0]
         let set = sets.split('; ');
         let possible = true;
-
-        set.forEach((item) => {
-            let cubes = item.split(", ");
-            cubes.forEach(function (cube) {
-                let [count, color] = cube.split(' ');
-                if (+count > Bag[color]) possible = false
-            });
-        });
-
-        if (possible) sumOfIds += gameId
-    });
-
-    return sumOfIds;
-};
-
-const PartTwo = (document: string[]) => {
-    let sumOfIds = 0;
-
-    document.forEach((line) => {
-        let [, sets] = line.split(': ');
-        let set = sets.split('; ');
         let bagMin = { red: 0, green: 0, blue: 0 };
+        return { game, sets, gameId, set, possible, bagMin }
+    }
 
-        set.forEach((item) => {
-            let cubes = item.split(", ");
-            cubes.forEach(function (cube) {
-                let [count, color] = cube.split(' ');
-                if (+count > bagMin[color]) bagMin[color] = +count;
+    // Part 1
+    private PartOne(document: string[]) {
+        let sumOfIds = 0;
+        const Bag = { red: 12, green: 13, blue: 14 };
+
+        document.forEach((line: string) => {
+            let { gameId, set, possible } = this.useLineData(line);
+
+            set.forEach((item: string) => {
+                let cubes = item.split(", ");
+                cubes.forEach((cube: string) => {
+                    let [count, color] = cube.split(' ');
+                    if (+count > Bag[color]) possible = false
+                });
             });
+
+            if (possible) sumOfIds += gameId
         });
 
-        sumOfIds += Object.values(bagMin).reduce((p, n) => p * n, 1);
-    });
+        return sumOfIds;
+    };
 
-    return sumOfIds;
+    // Part 2
+    private PartTwo(document: string[]) {
+        let sumOfIds = 0;
+
+        document.forEach((line) => {
+            let { set, bagMin } = this.useLineData(line);
+
+            set.forEach((item: string) => {
+                let cubes = item.split(", ");
+                cubes.forEach((cube: string) => {
+                    let [count, color] = cube.split(' ');
+                    if (+count > bagMin[color]) bagMin[color] = +count;
+                });
+            });
+
+            sumOfIds += Object.values(bagMin).reduce((p, n) => p * n, 1);
+        });
+
+        return sumOfIds;
+    }
+
+    // Result
+    public Result() {
+        const partOne = this.PartOne(this.input);
+        const partTwo = this.PartTwo(this.input);
+        console.log("Part 1: ", partOne);
+        console.log("Part 2: ", partTwo);
+    }
 }
 
-console.log("Part 1: ", PartOne(PuzzleInput));
-console.log("Part 2: ", PartTwo(PuzzleInput));
+const dayTwo = new DayTwo(PuzzleInput);
+dayTwo.Result();
