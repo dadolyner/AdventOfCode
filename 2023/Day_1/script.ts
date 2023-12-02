@@ -1,4 +1,6 @@
-import { PuzzleInput } from "./puzzle_input";
+import { usePuzzleInput } from "../utils";
+// @ts-ignore
+const PuzzleInput = usePuzzleInput(__dirname)
 
 class DayOne {
 	input: string[];
