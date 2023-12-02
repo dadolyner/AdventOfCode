@@ -41,17 +41,24 @@ class DayOne {
 	};
 
 	// Part 1
-	public PartOne(document: string[]) {
+	private PartOne(document: string[]) {
 		return this.calculateCalibration(document);
 	}
 
 	// Part 2
-	public PartTwo(document: string[]) {
+	private PartTwo(document: string[]) {
 		const sanitizedDocument = this.sanitize(document);
 		return this.calculateCalibration(sanitizedDocument);
+	}
+
+	// Result
+	public Result() {
+		const partOne = this.PartOne(this.input);
+		const partTwo = this.PartTwo(this.input);
+		console.log("Part 1: ", partOne);
+		console.log("Part 2: ", partTwo);
 	}
 }
 
 const dayOne = new DayOne(PuzzleInput);
-console.log("Part 1: ", dayOne.PartOne(dayOne.input));
-console.log("Part 2: ", dayOne.PartTwo(dayOne.input));
+dayOne.Result();
