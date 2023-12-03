@@ -3,7 +3,7 @@ import { usePuzzleInput } from "../utils";
 const PuzzleInput = usePuzzleInput(__dirname)
 
 class DayOne {
-	input: string[];
+	private readonly input: string[];
 
 	constructor(input: string[]) {
 		this.input = input;
