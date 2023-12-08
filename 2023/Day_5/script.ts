@@ -223,7 +223,6 @@ class DayFive {
         }
 
         if (start < oldRange.end) {
-            // closing the right end
             newRanges.push(this.createRangeObj(start, oldRange.end));
         }
 
@@ -238,14 +237,9 @@ class DayFive {
 
             const current = list[n];
             const next = list[n + 1];
-
-            if (next == undefined) {
-                return;
-            }
-
-            if (current.start <= next.start) {
-                continue;
-            }
+            
+            if (next == undefined) return;
+            if (current.start <= next.start) continue;
 
             list[n] = next;
             list[n + 1] = current;
