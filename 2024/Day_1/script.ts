@@ -2,7 +2,7 @@ import { usePuzzleInput } from "../utils";
 // @ts-ignore
 const PuzzleInput = usePuzzleInput(__dirname);
 
-class DayOne {
+class Solution {
 	private readonly input: string[];
 	private sum: number = 0;
 	private similarity: number = 0;
@@ -70,6 +70,6 @@ class DayOne {
 }
 
 console.time("Day 1 Speed");
-const dayOne = new DayOne(PuzzleInput);
-dayOne.Result();
+const solution = new Solution(PuzzleInput);
+solution.Result();
 console.timeEnd("Day 1 Speed");
