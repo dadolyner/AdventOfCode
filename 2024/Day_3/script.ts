@@ -72,7 +72,7 @@ class Solution {
 	}
 }
 
-console.time("Day 2 Speed");
+console.time("Day 3 Speed");
 const solution = new Solution(PuzzleInput);
 solution.Result();
-console.timeEnd("Day 2 Speed");
+console.timeEnd("Day 3 Speed");
